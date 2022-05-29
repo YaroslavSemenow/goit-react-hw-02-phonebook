@@ -1,10 +1,17 @@
 import { Component } from 'react';
 import Container from './Container';
+import Filter from './Filter';
 import Contacts from './Contacts';
 
 class App extends Component {
   state = {
-    contacts: [],
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
     name: '',
     number: '',
   };
@@ -16,20 +23,32 @@ class App extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { contacts, name, number } = this.state;
+
     this.setState({
-      contacts: [
-        ...this.state.contacts,
-        { name: this.state.name, number: this.state.number },
-      ],
+      contacts: [...contacts, { name: name, number: number }],
     });
-    this.reset();
+    this.resetForm();
   };
 
-  reset = () => {
+  resetForm = () => {
     this.setState({ name: '', number: '' });
   };
 
+  getVisibleContacts = () => {
+    const { contacts, filter } = this.state;
+
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
   render() {
+    const { name, number, filter } = this.state;
+    const visibleContacts = this.getVisibleContacts();
+
     return (
       <Container>
         <form onSubmit={this.handleSubmit}>
@@ -42,7 +61,7 @@ class App extends Component {
               pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
               title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
               onChange={this.handleInputChange}
-              value={this.state.name}
+              value={name}
               required
             />
           </label>
@@ -54,13 +73,14 @@ class App extends Component {
               pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
               title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
               onChange={this.handleInputChange}
-              value={this.state.number}
+              value={number}
               required
             />
           </label>
           <button type="submit">Add contact</button>
         </form>
-        <Contacts contacts={this.state.contacts} />
+        <Filter value={filter} onChange={this.handleInputChange} />
+        <Contacts contacts={visibleContacts} />
       </Container>
     );
   }
