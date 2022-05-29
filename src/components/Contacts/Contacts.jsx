@@ -6,7 +6,9 @@ export default function Contacts({ contacts }) {
       <h2>Contacts</h2>
       <ul>
         {contacts.map(contact => (
-          <li key={shortid.generate()}>{contact}</li>
+          <li key={shortid.generate()}>
+            {contact.name}: {contact.number}
+          </li>
         ))}
       </ul>
     </div>
