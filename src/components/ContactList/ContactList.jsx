@@ -6,6 +6,7 @@ export default function ContactList({ contacts }) {
       {contacts.map(contact => (
         <li key={shortid.generate()}>
           {contact.name}: {contact.number}
+          <button>Delete</button>
         </li>
       ))}
     </ul>
