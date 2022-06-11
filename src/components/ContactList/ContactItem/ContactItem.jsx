@@ -1,10 +1,15 @@
 import PropTypes from 'prop-types';
+import style from './ContactItem.module.css';
 
 export default function ContactItem({ id, name, number, onDelete }) {
   return (
-    <li>
-      {name}: {number}
-      <button onClick={() => onDelete(id)}>Delete</button>
+    <li className={style.item}>
+      <div className={style.item_inner}>
+        <span className={style.item_name}>{name}:</span> <span>{number}</span>
+        <button className={style.item_btn} onClick={() => onDelete(id)}>
+          Delete
+        </button>
+      </div>
     </li>
   );
 }
